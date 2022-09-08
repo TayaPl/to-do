@@ -1,0 +1,12 @@
+.form_input {
+  border: 2px solid #fe8535;
+  border-radius: 5px;
+  font-weight: lighter;
+  min-width: 80%;
+  padding: 2px;
+}
+.form_container {
+  display: flex;
+  align-items: center;
+  margin: 0 0 10px 0;
+}

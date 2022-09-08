@@ -1,0 +1,8 @@
+.todo {
+  background-color: white;
+  padding: 20px;
+  margin: 5px;
+  border-radius: 5px;
+  min-width: 70%;
+  align-self: stretch;
+}

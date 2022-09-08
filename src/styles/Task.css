@@ -1,0 +1,18 @@
+.task_container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 2px;
+}
+.task_button {
+  background-color: white;
+  border: 2px solid #fd292f;
+}
+.task_text {
+  border: 2px solid #fd292f;
+  color: #fd292f;
+  border-radius: 5px;
+  min-width: 80%;
+  padding: 2px;
+}

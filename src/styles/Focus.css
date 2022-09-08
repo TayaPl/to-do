@@ -1,0 +1,6 @@
+#focus {
+  display: flex;
+  margin: 20px 30px;
+  height: 100%;
+  align-items: center;
+}
