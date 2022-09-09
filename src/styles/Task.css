@@ -16,3 +16,19 @@
   min-width: 80%;
   padding: 2px;
 }
+.task_button__active {
+  border-color: #c5b0a2;
+}
+
+.task_button__active::before {
+  content: "✔";
+  color: #c5b0a2;
+  display: block;
+  float: left;
+  margin-top: -5px;
+}
+
+.task_text__active {
+  border-color: #c5b0a2;
+  color: #c5b0a2;
+}
