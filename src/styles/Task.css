@@ -25,7 +25,9 @@
   color: #c5b0a2;
   display: block;
   float: left;
+  max-width: 35px;
   margin-top: -5px;
+  margin-left: 3px;
 }
 
 .task_text__active {

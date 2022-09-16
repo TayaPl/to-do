@@ -1,8 +1,22 @@
 .todo {
   background-color: white;
+  display: flex;
+  position: relative;
+  flex-direction: column;
   padding: 20px;
   margin: 5px;
   border-radius: 5px;
   min-width: 70%;
   align-self: stretch;
+  overflow: hidden;
+}
+.todo_reset {
+  position: absolute;
+  justify-content: flex-end;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+.todo__inactive {
+  background-color: #c5b0a2;
 }

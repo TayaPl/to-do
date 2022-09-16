@@ -1,23 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "./UI/button/Button.jsx";
 import "../styles/Task.css";
 
-const Task = ({ children, ...props }) => {
-  const [isActive, setActive] = useState("false");
+const Task = ({ children, task, tasks, removeTask, ...props }) => {
+  const [isActive, setActive] = useState(task?.active);
+  useEffect(() => {
+    localStorage.setItem(
+      "tasks",
+      JSON.stringify(
+        tasks.map((t) => (t.id === task.id ? { ...t, active: t.active } : t))
+      )
+    );
+  }, [isActive]);
 
   const handleToggle = () => {
-    setActive(!isActive);
+    task.active = !task.active;
+    setActive(task.active);
   };
 
   return (
     <div id="task" className="task">
       <div className="task_container">
         <Button
-          classNames={(!isActive ? "task_button__active" : "") + " task_button"}
+          classNames={(isActive ? "task_button__active" : "") + " task_button"}
           onClick={handleToggle}
+          onContextMenu={(e) => {
+            removeTask(task);
+            e.preventDefault();
+            return false;
+          }}
         ></Button>
-        <div className={(!isActive ? "task_text__active" : "") + " task_text"}>
-          Я задача
+        <div className={(isActive ? "task_text__active" : "") + " task_text"}>
+          {children}
         </div>
       </div>
     </div>
