@@ -10,14 +10,19 @@
   border: 2px solid #fd292f;
 }
 .task_text {
+  
   border: 2px solid #fd292f;
   color: #fd292f;
   border-radius: 5px;
   min-width: 80%;
+  max-width: 80%;
   padding: 2px;
+  min-height: 3em;
+  word-wrap:break-word;
 }
 .task_button__active {
   border-color: #c5b0a2;
+  
 }
 
 .task_button__active::before {

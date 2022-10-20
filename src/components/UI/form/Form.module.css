@@ -1,9 +1,13 @@
-.form_input {
+.form_textarea {
   border: 2px solid #fe8535;
   border-radius: 5px;
+  color: #c5b0a2;
   font-weight: lighter;
   min-width: 80%;
+  min-height: 5em;
+  margin:0 auto;
   padding: 2px;
+  resize: none;
 }
 .form_container {
   display: flex;

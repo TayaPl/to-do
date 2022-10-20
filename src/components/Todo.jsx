@@ -16,7 +16,8 @@ const Todo = () => {
   }, [tasks]);
 
   const createTask = (newTask) => {
-    setTasks([newTask, ...tasks]);
+    if(tasks.length <12)
+      setTasks([newTask, ...tasks]);
   };
   const removeTask = (task) => {
     setTasks(tasks.filter((t) => t.id !== task.id));
