@@ -10,7 +10,6 @@
   border: 2px solid #fd292f;
 }
 .task_text {
-  
   border: 2px solid #fd292f;
   color: #fd292f;
   border-radius: 5px;
@@ -22,7 +21,7 @@
 }
 .task_button__active {
   border-color: #c5b0a2;
-  
+  transition: 0s;
 }
 
 .task_button__active::before {

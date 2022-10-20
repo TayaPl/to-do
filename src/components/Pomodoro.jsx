@@ -69,6 +69,8 @@ const Pomodoro = function () {
   };
 
   const iteraction = () =>{
+    console.log(getComputedStyle(document.body).getPropertyValue('--full_circle'))
+    document.documentElement.style.setProperty('--full_circle', (getComputedStyle(document.body).getPropertyValue('--full_circle').replace('%','')-100/work)+'%');
     console.log("зашла в setInterval")
     if(work > 0){
       console.log("зашла в work > 0 " + work)
@@ -78,6 +80,7 @@ const Pomodoro = function () {
       SetBreakup((breakup) => breakup - 1)
     }
     else{
+      document.documentElement.style.setProperty('--full_circle', '100%');
       console.log("отмена"); 
       clearInterval(window.timerId);
       resetPomodoro();
@@ -136,23 +139,15 @@ const Pomodoro = function () {
       </h1>
       <Button
         id="start"
-        classNames={
-          (!(work > 0 && breakup > 0 && round > 0) && !(States.wait == status) || isWorking 
-            ? "pomodoro__inactive"
-            : "") + " pomodoro_button"
-        }
+        classNames= "pomodoro_button"
+        // classNames={
+        //   (!(work > 0 && breakup > 0 && round > 0) && !(States.wait == status) || isWorking 
+        //     ? "pomodoro__inactive"
+        //     : "") + " pomodoro_button"
+        // }
         onClick = {timer}
       >
-        старт
-      </Button>
-      <Button
-        id="stop"
-        classNames={
-          (!isWorking ? "pomodoro__inactive" : "") + " pomodoro_button"
-        }
-        onClick = {timer}
-      >
-        стоп
+        {!isWorking ? "Старт" : "Стоп" }
       </Button>
       <div className="pomodoro_options">
         <div className="pomodoro_repeat">

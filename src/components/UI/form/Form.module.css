@@ -1,16 +1,35 @@
 .form_textarea {
-  border: 2px solid #fe8535;
+  border: 2px solid #c5b0a2;
   border-radius: 5px;
   color: #c5b0a2;
+  font-size: 1.5em;
   font-weight: lighter;
   min-width: 80%;
-  min-height: 5em;
-  margin:0 auto;
-  padding: 2px;
+  min-height: 3em;
+  margin:0 0 0 auto;
   resize: none;
+  transition: 1s;
+  text-align: center;
+  padding: 15px 5px 0;
+  overflow:hidden;
+}
+.form_textarea::placeholder {
+  color: #c5b0a2;  
+}
+
+.form_textarea:hover {
+  border: 2.5px solid #fe8535;
+  color: #fe8535;
 }
 .form_container {
   display: flex;
   align-items: center;
   margin: 0 0 10px 0;
+}
+.form_button__inactive{
+  transition: 2s;
+  background-color: #fe8535;
+}
+.form_button__inactive{
+  background-color: #c5b0a2;
 }

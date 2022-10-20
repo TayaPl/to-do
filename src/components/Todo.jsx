@@ -16,26 +16,33 @@ const Todo = () => {
   }, [tasks]);
 
   const createTask = (newTask) => {
-    if(tasks.length <12)
+    if(tasks.length < 12)
       setTasks([newTask, ...tasks]);
   };
   const removeTask = (task) => {
     setTasks(tasks.filter((t) => t.id !== task.id));
   };
   const resetTasks = () => {
-    setTasks([]);
+    // setTasks([]);
+    setTasks(tasks.filter((t) => t.active === false));
   };
+  const sortTasks = () => {
+    setTasks(tasks.sort(function(x, y) {
+      console.log('hello!')
+      return (x.active === y.active) ? 0 : x.active ? 1 : -1;
+  }))
+  }
 
   return (
     <div id="todo" className="todo">
       <h1>ToDo</h1>
       <Form create={createTask}></Form>
-      <TaskList tasks={tasks} removeTask={removeTask} />
+      <TaskList tasks={tasks} removeTask={removeTask} sort={sortTasks}/>
       <Button
         classNames={(tasks.length > 0 ? "" : "todo__inactive") + " todo_reset"}
         onClick={resetTasks}
       >
-        сброс
+        очистить
       </Button>
     </div>
   );

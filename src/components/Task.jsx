@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import Button from "./UI/button/Button.jsx";
 import "../styles/Task.css";
 
-const Task = ({ children, task, tasks, removeTask, ...props }) => {
+const Task = ({ children, task, tasks, removeTask, sort, ...props }) => {
   const [isActive, setActive] = useState(task?.active);
   useEffect(() => {
+    sort();
     localStorage.setItem(
       "tasks",
       JSON.stringify(

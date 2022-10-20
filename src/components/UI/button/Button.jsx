@@ -9,7 +9,7 @@ const Button = ({ children, classNames, ...props }) => {
         return false;
       }}
       {...props}
-      className={classNames + " " + classes.button}
+      className={classes.button + " " + classNames}
     >
       {children}
     </button>

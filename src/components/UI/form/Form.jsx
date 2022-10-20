@@ -35,7 +35,7 @@ setTask("");}
           placeholder="Запланируйте задачу на сессию"
           className={classses.form_textarea}
         ></textarea>
-        <Button classNames={classses.form_button} onClick={addNewTask}/>
+        <Button classNames={(task == '' ? classses.form_button__inactive : '')+ ' ' +classses.form_button} onClick={addNewTask}/>
       </form>
     </div>
   );
