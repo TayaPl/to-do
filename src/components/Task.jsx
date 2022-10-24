@@ -5,18 +5,20 @@ import "../styles/Task.css";
 const Task = ({ children, task, tasks, removeTask, sort, ...props }) => {
   const [isActive, setActive] = useState(task?.active);
   useEffect(() => {
-    sort();
     localStorage.setItem(
       "tasks",
       JSON.stringify(
         tasks.map((t) => (t.id === task.id ? { ...t, active: t.active } : t))
       )
     );
+    sort(JSON.parse(localStorage.getItem("tasks")));
   }, [isActive]);
 
   const handleToggle = () => {
-    task.active = !task.active;
-    setActive(task.active);
+    if (!JSON.parse(localStorage.getItem("working"))) {
+      task.active = !task.active;
+      setActive(task.active);
+    }
   };
 
   return (

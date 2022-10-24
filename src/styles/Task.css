@@ -34,6 +34,11 @@
   margin-left: 3px;
 }
 
+.task_text{
+  padding: 13px 5px 0;
+  overflow:hidden;
+}
+
 .task_text__active {
   border-color: #c5b0a2;
   color: #c5b0a2;

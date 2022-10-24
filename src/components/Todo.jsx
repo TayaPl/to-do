@@ -11,39 +11,67 @@ const Todo = () => {
       ? JSON.parse(localStorage.getItem("tasks"))
       : []
   );
+  const [isWorking, SetWorking] = useState(
+    JSON.parse(localStorage.getItem("working")) !== null
+      ? Boolean(JSON.parse(localStorage.getItem("working")))
+      : false
+  );
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
+  useEffect(() => {
+    console.log("working " + isWorking);
+    localStorage.setItem("working", JSON.stringify(isWorking));
+  }, [isWorking]);
 
   const createTask = (newTask) => {
-    if(tasks.length < 12)
+    if (tasks.length < 12 && !JSON.parse(localStorage.getItem("working")))
       setTasks([newTask, ...tasks]);
   };
   const removeTask = (task) => {
-    setTasks(tasks.filter((t) => t.id !== task.id));
+    if (!JSON.parse(localStorage.getItem("working")))
+      setTasks(tasks.filter((t) => t.id !== task.id));
   };
   const resetTasks = () => {
     // setTasks([]);
-    setTasks(tasks.filter((t) => t.active === false));
+    if (!JSON.parse(localStorage.getItem("working"))) {
+      const active_tasks = tasks.filter((t) => t.active === false);
+      const unactive_tasks = tasks.filter((t) => t.active === true);
+      console.log(unactive_tasks.length);
+      if (unactive_tasks.length <= 0) {
+        const conf = window.confirm(
+          "В ToDo остались только активные задачи. Вы уверенны, что хотите их очиститЬ?"
+        );
+        if (conf) setTasks([]);
+      } else setTasks(active_tasks);
+    }
   };
-  const sortTasks = () => {
-    setTasks(tasks.sort(function(x, y) {
-      console.log('hello!')
-      return (x.active === y.active) ? 0 : x.active ? 1 : -1;
-  }))
-  }
+  const sortTasks = (tasks_sort) => {
+    setTasks(
+      tasks_sort.sort(function (x, y) {
+        console.log("hello!");
+        return x.active === y.active ? 0 : x.active ? 1 : -1;
+      })
+    );
+  };
 
   return (
     <div id="todo" className="todo">
       <h1>ToDo</h1>
-      <Form create={createTask}></Form>
-      <TaskList tasks={tasks} removeTask={removeTask} sort={sortTasks}/>
-      <Button
-        classNames={(tasks.length > 0 ? "" : "todo__inactive") + " todo_reset"}
-        onClick={resetTasks}
-      >
-        очистить
-      </Button>
+      {!isWorking ? <Form create={createTask}></Form> : <div id="form"></div>}
+      <TaskList tasks={tasks} removeTask={removeTask} sort={sortTasks} />
+      {!isWorking ? (
+        <Button
+          classNames={
+            (tasks.length > 0 ? "" : "todo__inactive") + " todo_reset"
+          }
+          onClick={resetTasks}
+        >
+          очистить
+        </Button>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

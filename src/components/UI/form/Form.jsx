@@ -15,14 +15,16 @@ const Form = ({ create }) => {
   };
 
   useEffect(() => {
-    if(task[task.length-1] == '\n'){
+    if (task[task.length - 1] == "\n") {
       const newTask = { id: Date.now(), task: task, active: false };
-    if (task.length > 0 && task.trim() !== "") {create(newTask);
-setTask("");}
+      if (task.length > 0 && task.trim() !== "") {
+        create(newTask);
+        setTask("");
+      }
     }
     if (task.length >= maxLength) {
       setTask(task.substr(0, maxLength));
-  }
+    }
   }, [task]);
 
   return (
@@ -35,7 +37,14 @@ setTask("");}
           placeholder="Запланируйте задачу на сессию"
           className={classses.form_textarea}
         ></textarea>
-        <Button classNames={(task == '' ? classses.form_button__inactive : '')+ ' ' +classses.form_button} onClick={addNewTask}/>
+        <Button
+          classNames={
+            (task.trim() == "" ? classses.form_button__inactive : "") +
+            " " +
+            classses.form_button
+          }
+          onClick={addNewTask}
+        />
       </form>
     </div>
   );

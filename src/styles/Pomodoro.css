@@ -1,6 +1,12 @@
 :root {
   --full_circle: 100%;
 }
+.work{
+  --color_circle: #fd292f;
+}
+.breakup{
+  --color_circle: #29fd29;
+}
 
 .pomodoro {
   display: flex;
@@ -18,7 +24,7 @@
   transform: scale(-1, 1);
   overflow: hidden;
   border-radius: 50%;
-  background: conic-gradient(#fd292f var(--full_circle), transparent 0);
+  background: conic-gradient(var(--color_circle) var(--full_circle), transparent 0);
 }
 
 .pomodoro_button {
@@ -69,5 +75,8 @@
 
 .pomodoro__inactive {
   background-color: #c5b0a2;
+  cursor: default;
+}
+.pomodoro_time__inactive {
   cursor: default;
 }

@@ -26,9 +26,8 @@
   align-items: center;
   margin: 0 0 10px 0;
 }
-.form_button__inactive{
+.form_button{
   transition: 2s;
-  background-color: #fe8535;
 }
 .form_button__inactive{
   background-color: #c5b0a2;
