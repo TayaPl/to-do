@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Button from "./UI/button/Button.jsx";
 import "../styles/Task.css";
+import { Reorder } from "framer-motion";
 
 const Task = ({ children, task, tasks, removeTask, sort, ...props }) => {
   const [isActive, setActive] = useState(task?.active);
@@ -22,8 +23,16 @@ const Task = ({ children, task, tasks, removeTask, sort, ...props }) => {
   };
 
   return (
-    <div id="task" className="task">
-      <div className="task_container">
+    <Reorder.Item
+      key={task}
+      value={task}
+      whileDrag={{
+        scale: 1.1,
+        backgroundColor: "white",
+        boxShadow: "rgba(0,0,0,0.12) 0px 1px 3px, rgba(0,0,0,0.24) 0px 1px 2px",
+      }}
+    >
+      <div id="task" className="task">
         <Button
           classNames={(isActive ? "task_button__active" : "") + " task_button"}
           onClick={handleToggle}
@@ -37,7 +46,7 @@ const Task = ({ children, task, tasks, removeTask, sort, ...props }) => {
           {children}
         </div>
       </div>
-    </div>
+    </Reorder.Item>
   );
 };
 

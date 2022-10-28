@@ -4,25 +4,25 @@ import Button from "./UI/button/Button.jsx";
 import TaskList from "./TaskList";
 import "../styles/Todo.css";
 
-const Todo = () => {
+const Todo = ({ isWorking, SetWorking }) => {
   const [tasks, setTasks] = useState(
     // [{ id: 1, task: "task", active: false },{ id: 2, task: "task2", active: true },]
     JSON.parse(localStorage.getItem("tasks")) !== null
       ? JSON.parse(localStorage.getItem("tasks"))
       : []
   );
-  const [isWorking, SetWorking] = useState(
-    JSON.parse(localStorage.getItem("working")) !== null
-      ? Boolean(JSON.parse(localStorage.getItem("working")))
-      : false
-  );
+  // const [isWorking, SetWorking] = useState(
+  //   JSON.parse(localStorage.getItem("working")) !== null
+  //     ? Boolean(JSON.parse(localStorage.getItem("working")))
+  //     : false
+  // );
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
-  useEffect(() => {
-    console.log("working " + isWorking);
-    localStorage.setItem("working", JSON.stringify(isWorking));
-  }, [isWorking]);
+  // useEffect(() => {
+  //   // console.log("working " + isWorking);
+  //   localStorage.setItem("working", JSON.stringify(isWorking));
+  // }, [isWorking]);
 
   const createTask = (newTask) => {
     if (tasks.length < 12 && !JSON.parse(localStorage.getItem("working")))
@@ -49,7 +49,6 @@ const Todo = () => {
   const sortTasks = (tasks_sort) => {
     setTasks(
       tasks_sort.sort(function (x, y) {
-        console.log("hello!");
         return x.active === y.active ? 0 : x.active ? 1 : -1;
       })
     );
@@ -58,8 +57,13 @@ const Todo = () => {
   return (
     <div id="todo" className="todo">
       <h1>ToDo</h1>
-      {!isWorking ? <Form create={createTask}></Form> : <div id="form"></div>}
-      <TaskList tasks={tasks} removeTask={removeTask} sort={sortTasks} />
+      {!isWorking ? <Form create={createTask}></Form> : null}
+      <TaskList
+        tasks={tasks}
+        removeTask={removeTask}
+        sort={sortTasks}
+        setTasks={setTasks}
+      />
       {!isWorking ? (
         <Button
           classNames={
@@ -69,9 +73,7 @@ const Todo = () => {
         >
           очистить
         </Button>
-      ) : (
-        ""
-      )}
+      ) : null}
     </div>
   );
 };
