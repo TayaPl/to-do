@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: flex-end;
   padding: 2px;
+  background-color: white;
 }
 .task_button {
   background-color: white;

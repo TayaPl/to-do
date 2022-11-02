@@ -16,22 +16,12 @@ const Task = ({ children, task, tasks, removeTask, sort, ...props }) => {
   }, [isActive]);
 
   const handleToggle = () => {
-    if (!JSON.parse(localStorage.getItem("working"))) {
-      task.active = !task.active;
-      setActive(task.active);
-    }
+    task.active = !task.active;
+    setActive(task.active);
   };
 
   return (
-    <Reorder.Item
-      key={task}
-      value={task}
-      whileDrag={{
-        scale: 1.1,
-        backgroundColor: "white",
-        boxShadow: "rgba(0,0,0,0.12) 0px 1px 3px, rgba(0,0,0,0.24) 0px 1px 2px",
-      }}
-    >
+    <Reorder.Item key={task} value={task}>
       <div id="task" className="task">
         <Button
           classNames={(isActive ? "task_button__active" : "") + " task_button"}

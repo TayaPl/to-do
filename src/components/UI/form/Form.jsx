@@ -34,17 +34,17 @@ const Form = ({ create }) => {
           value={task}
           onChange={(e) => setTask(e.target.value)}
           type="text"
-          placeholder="Запланируйте задачу на сессию"
+          placeholder="Запланируйте задачи на сессию"
           className={classses.form_textarea}
         ></textarea>
-        <Button
+        {/* <Button
           classNames={
             (task.trim() == "" ? classses.form_button__inactive : "") +
             " " +
             classses.form_button
           }
           onClick={addNewTask}
-        />
+        /> */}
       </form>
     </div>
   );

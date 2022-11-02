@@ -4,33 +4,18 @@ import Button from "./UI/button/Button.jsx";
 import TaskList from "./TaskList";
 import "../styles/Todo.css";
 
-const Todo = ({ isWorking, SetWorking }) => {
-  const [tasks, setTasks] = useState(
-    // [{ id: 1, task: "task", active: false },{ id: 2, task: "task2", active: true },]
-    JSON.parse(localStorage.getItem("tasks")) !== null
-      ? JSON.parse(localStorage.getItem("tasks"))
-      : []
-  );
-  // const [isWorking, SetWorking] = useState(
-  //   JSON.parse(localStorage.getItem("working")) !== null
-  //     ? Boolean(JSON.parse(localStorage.getItem("working")))
-  //     : false
-  // );
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
-  // useEffect(() => {
-  //   // console.log("working " + isWorking);
-  //   localStorage.setItem("working", JSON.stringify(isWorking));
-  // }, [isWorking]);
-
+const Todo = ({ status, States, tasks, SetTasks }) => {
   const createTask = (newTask) => {
-    if (tasks.length < 12 && !JSON.parse(localStorage.getItem("working")))
-      setTasks([newTask, ...tasks]);
+    if (tasks.length < 7 && !JSON.parse(localStorage.getItem("working")))
+      SetTasks([newTask, ...tasks]);
+    else
+      alert(
+        "Ученые выяснили, что за раз человек лучше запоминает 5-9 единиц информации. Постарайтесь сосредоточиться на небольшом количестве задач!"
+      );
   };
   const removeTask = (task) => {
     if (!JSON.parse(localStorage.getItem("working")))
-      setTasks(tasks.filter((t) => t.id !== task.id));
+      SetTasks(tasks.filter((t) => t.id !== task.id));
   };
   const resetTasks = () => {
     // setTasks([]);
@@ -40,14 +25,14 @@ const Todo = ({ isWorking, SetWorking }) => {
       console.log(unactive_tasks.length);
       if (unactive_tasks.length <= 0) {
         const conf = window.confirm(
-          "В ToDo остались только активные задачи. Вы уверенны, что хотите их очиститЬ?"
+          "В ToDo остались только активные задачи. Вы уверенны, что хотите их очистить?"
         );
-        if (conf) setTasks([]);
-      } else setTasks(active_tasks);
+        if (conf) SetTasks([]);
+      } else SetTasks(active_tasks);
     }
   };
   const sortTasks = (tasks_sort) => {
-    setTasks(
+    SetTasks(
       tasks_sort.sort(function (x, y) {
         return x.active === y.active ? 0 : x.active ? 1 : -1;
       })
@@ -56,21 +41,18 @@ const Todo = ({ isWorking, SetWorking }) => {
 
   return (
     <div id="todo" className="todo">
-      <h1>ToDo</h1>
-      {!isWorking ? <Form create={createTask}></Form> : null}
+      {status == States.default || status == States.wait_work ? (
+        <Form create={createTask}></Form>
+      ) : null}
       <TaskList
         tasks={tasks}
         removeTask={removeTask}
         sort={sortTasks}
-        setTasks={setTasks}
+        setTasks={SetTasks}
       />
-      {!isWorking ? (
-        <Button
-          classNames={
-            (tasks.length > 0 ? "" : "todo__inactive") + " todo_reset"
-          }
-          onClick={resetTasks}
-        >
+      {(status == States.default || status == States.wait_work) &&
+      tasks.length > 0 ? (
+        <Button classNames=" todo_reset" onClick={resetTasks}>
           очистить
         </Button>
       ) : null}

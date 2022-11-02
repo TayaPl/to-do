@@ -4,9 +4,9 @@
   color: #c5b0a2;
   font-size: 1.5em;
   font-weight: lighter;
-  min-width: 80%;
+  min-width: 90%;
   min-height: 3em;
-  margin:0 0 0 auto;
+  margin:0 auto;
   resize: none;
   transition: 1s;
   text-align: center;
@@ -26,9 +26,9 @@
   align-items: center;
   margin: 0 0 10px 0;
 }
-.form_button{
+/* .form_button{
   transition: 2s;
 }
 .form_button__inactive{
   background-color: #c5b0a2;
-}
+} */

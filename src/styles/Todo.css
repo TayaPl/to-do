@@ -1,19 +1,19 @@
 .todo {
-  background-color: white;
-  display: flex;
   position: relative;
-  flex-direction: column;
+  display: flex;
+  flex-direction: column; 
+  background-color: white;
   padding: 20px;
   margin: 5px;
   border-radius: 5px;
   min-width: 70%;
   align-self: stretch;
   overflow: hidden;
+  justify-content: center;
 }
 .todo_reset {
   position: absolute;
   justify-content: flex-end;
-  position: absolute;
   bottom: 20px;
   right: 20px;
 }

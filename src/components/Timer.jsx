@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import Button from "./UI/button/Button";
 import "../styles/Timer.css";
 
-const States = {
-  default: "default",
-  work: "work",
-  breakup: "breakup",
-  wait_work: "wait_work",
-  wait_breakup: "wait_breakup",
-};
-
-const Timer = ({ isWorking, SetWorking }) => {
+const Timer = ({
+  isWorking,
+  SetWorking,
+  status,
+  SetStatus,
+  States,
+  tasksLength,
+}) => {
   const [work, SetWork] = useState(
     JSON.parse(localStorage.getItem("work")) !== null
       ? parseInt(JSON.parse(localStorage.getItem("work")))
@@ -26,37 +25,64 @@ const Timer = ({ isWorking, SetWorking }) => {
       ? parseInt(JSON.parse(localStorage.getItem("round")))
       : 0
   ); //количество повторов
-  const [status, SetStatus] = useState(
-    JSON.parse(localStorage.getItem("status")) !== undefined
-      ? JSON.parse(localStorage.getItem("status"))
-      : States.default
-  ); //статус, в котором находится программа
-  const [timeLeft, setTimeLeft] = useState(work == 0 ? breakup : work); // время таймера
+  const [timeLeft, setTimeLeft] = useState(
+    status == States.default
+      ? work == 0
+        ? breakup
+        : work
+      : JSON.parse(localStorage.getItem("timeLeft")) !== null
+      ? parseInt(JSON.parse(localStorage.getItem("timeLeft")))
+      : work == 0
+      ? breakup
+      : work
+  ); // время таймера
+  const [roundLeft, setRoundLeft] = useState(
+    status == States.default
+      ? 1
+      : JSON.parse(localStorage.getItem("roundLeft")) !== null
+      ? parseInt(JSON.parse(localStorage.getItem("roundLeft")))
+      : 1
+  ); // повтор таймера
+  const [circleLeft, setCircleLeft] = useState(
+    status == States.default
+      ? 100
+      : JSON.parse(localStorage.getItem("circleLeft")) !== null
+      ? parseInt(JSON.parse(localStorage.getItem("circleLeft")))
+      : 100
+  ); // процент круга
 
   useEffect(() => {
-    handleReset();
-  }, []);
-  useEffect(() => {
     localStorage.setItem("work", JSON.stringify(work));
-    console.log("work " + work);
+    // console.log("work " + work);
   }, [work]);
   useEffect(() => {
     localStorage.setItem("breakup", JSON.stringify(breakup));
-    console.log("breakup " + breakup);
+    // console.log("breakup " + breakup);
   }, [breakup]);
   useEffect(() => {
     localStorage.setItem("round", JSON.stringify(round));
-    console.log("round " + round);
+    // console.log("round " + round);
   }, [round]);
   useEffect(() => {
     localStorage.setItem("timeLeft", JSON.stringify(timeLeft));
-    console.log("timeLeft " + timeLeft);
+    // console.log("timeLeft " + timeLeft);
   }, [timeLeft]);
   useEffect(() => {
-    if (status == States.work) SetWorking(true);
-    else SetWorking(false);
+    localStorage.setItem("roundLeft", JSON.stringify(roundLeft));
+    // console.log("roundLeft " + roundLeft);
+  }, [roundLeft]);
+  useEffect(() => {
+    const root = document.querySelector(":root");
+    root.style.setProperty("--full_circle", circleLeft + "%");
+    localStorage.setItem("circleLeft", JSON.stringify(circleLeft));
+    // console.log("circleLeft " + circleLeft);
+    // console.log(
+    //   getComputedStyle(document.body).getPropertyValue("--full_circle")
+    // );
+  }, [circleLeft]);
+  useEffect(() => {
     localStorage.setItem("status", JSON.stringify(status));
-    console.log("status " + status);
+    // console.log("status " + status);
   }, [status]);
 
   const twoNum = (n) => {
@@ -71,51 +97,46 @@ const Timer = ({ isWorking, SetWorking }) => {
   const seconds = twoNum(timeLeft % 60);
 
   useEffect(() => {
-    if (status == States.default && isWorking) {
+    if ((status == States.default || status == States.wait_work) && isWorking) {
       console.log("status == States.default && isWorking");
+      if (!(status == States.wait_work)) setTimeLeft(work);
       SetStatus(States.work);
-      setTimeLeft(work);
-    } else if (status == States.work && timeLeft <= 0) {
+    } else if (
+      (status == States.work && timeLeft < 0) ||
+      (status == States.wait_work && isWorking)
+    ) {
       console.log("status == States.work && setTimeLeft <= 0");
+      if (!(status == States.wait_work)) {
+        setTimeLeft(breakup);
+        setCircleLeft(0);
+      }
       SetStatus(States.breakup);
-      setTimeLeft(breakup);
-      const root = document.querySelector(":root");
-      root.style.setProperty("--full_circle", "100%");
-    } else if (status == States.breakup && timeLeft === 0) {
-      console.log("timeLeft === 0");
-      handleReset();
+    } else if (timeLeft < 0 && isWorking) {
+      setRoundLeft(roundLeft + 1);
+      console.log("там " + round + " ? " + roundLeft);
+      if (roundLeft <= round) {
+        setTimeLeft(work);
+        SetStatus(States.work);
+        setCircleLeft(100);
+      } else handleReset();
     }
     const interval = setInterval(() => {
       if (isWorking) {
-        setTimeLeft((timeLeft) => (timeLeft >= 1 ? timeLeft - 1 : 0));
-        document.documentElement.style.setProperty(
-          "--full_circle",
-          getComputedStyle(document.body)
-            .getPropertyValue("--full_circle")
-            .replace("%", "") -
-            100 / (status == States.work ? work : breakup) +
-            "%"
+        setTimeLeft((timeLeft) => timeLeft - 1);
+        setCircleLeft((circleLeft) =>
+          status === States.work
+            ? circleLeft - 100 / work
+            : circleLeft + 100 / breakup
         );
       }
     }, 1000);
 
     return () => {
-      console.log("перерыв " + status);
       clearInterval(interval);
     };
-  }, [timeLeft, isWorking]);
+  }, [timeLeft, isWorking, status, roundLeft, circleLeft]);
 
   const handleStart = () => {
-    // if (
-    //   status == States.default ||
-    //   (status == States.wait_work && timeLeft > 0)
-    // ) {
-    //   SetStatus(States.work);
-    //   setTimeLeft(work);
-    // } else if (status == States.wait_breakup && timeLeft > 0) {
-    //   SetStatus(States.work);
-    //   setTimeLeft(work);
-    // }
     SetWorking(true);
   };
   const handleStop = () => {
@@ -126,19 +147,24 @@ const Timer = ({ isWorking, SetWorking }) => {
         ? States.wait_breakup
         : status
     );
-
     SetWorking(false);
   };
   const handleReset = () => {
+    setRoundLeft(1);
     SetWorking(false);
-    SetWork(5);
-    SetBreakup(10);
-    SetRound(1);
+    if (status == States.default && (work > 0 || breakup > 0 || round > 0)) {
+      if (window.confirm("Сбросить все значения?")) {
+        SetWork(0);
+        SetBreakup(0);
+        SetRound(0);
+        // SetWork(5);
+        // SetBreakup(20);
+        // SetRound(1);
+      }
+    }
     setTimeLeft(0);
     SetStatus(States.default);
-    const root = document.querySelector(":root");
-    root.style.setProperty("--full_circle", "100%");
-    root.style.setProperty("--color_circle", "--color__work");
+    setCircleLeft(100);
   };
 
   return (
@@ -159,17 +185,42 @@ const Timer = ({ isWorking, SetWorking }) => {
               ? "breakup"
               : "work") + " pomodoro_tomato"
           }
+          style={
+            status == States.breakup || status == States.wait_breakup
+              ? { transform: "scale(1, 1)" }
+              : null
+          }
         >
           <div className="pomodoro_timeline"></div>
+          {!(status == States.default) ? (
+            <div
+              className={
+                (status == States.breakup || status == States.wait_breakup
+                  ? "breakup"
+                  : "work") + " pomodoro_counterRounds"
+              }
+              style={
+                status == States.breakup || status == States.wait_breakup
+                  ? { transform: "scale(1, 1)" }
+                  : null
+              }
+            >
+              {roundLeft}
+            </div>
+          ) : null}
         </div>
 
-        <h1 className="counter">
-          {hours > 0 ? <span>{hours}</span> : ""}
-          {hours > 0 ? <span>:</span> : ""}
-          <span>{minutes}</span>
-          <span>:</span>
-          <span>{seconds}</span>
-        </h1>
+        {status === States.default ? (
+          <h1 className="counter">00:00</h1>
+        ) : (
+          <h1 className="counter">
+            {hours > 0 ? <span>{hours}</span> : ""}
+            {hours > 0 ? <span>:</span> : ""}
+            <span>{minutes}</span>
+            <span>:</span>
+            <span>{seconds}</span>
+          </h1>
+        )}
 
         <div className="buttons">
           {isWorking ? (
@@ -187,14 +238,18 @@ const Timer = ({ isWorking, SetWorking }) => {
           ) : (
             <Button
               classNames={
-                (status == States.default &&
-                (work <= 0 || round <= 0 || breakup <= 0)
+                ((status == States.default &&
+                  (work <= 0 || round <= 0 || breakup <= 0)) ||
+                tasksLength === 0
                   ? "pomodoro__inactive"
                   : "") + " pomodoro_button"
               }
               onClick={() => {
-                if (work > 0 && round > 0 && breakup > 0) handleStart();
-                else alert("Убедитесь, что заполнили все поля");
+                tasksLength > 0
+                  ? work > 0 && round > 0 && breakup > 0
+                    ? handleStart()
+                    : alert("Убедитесь, что заполнили все поля")
+                  : alert("Добавьте задач для работы, чтобы не скучать");
               }}
             >
               Старт
@@ -207,7 +262,7 @@ const Timer = ({ isWorking, SetWorking }) => {
                 ? "pomodoro__inactive"
                 : "") + " pomodoro_button pomodoro_reset"
             }
-            onClick={!isWorking ? handleReset : ""}
+            onClick={!isWorking ? handleReset : null}
           >
             Сброс
           </Button>
@@ -216,7 +271,7 @@ const Timer = ({ isWorking, SetWorking }) => {
         {!isWorking && status === States.default ? (
           <div className="pomodoro_options">
             <div className="pomodoro_work">
-              работа:
+              <span className="pomodoro_options_text">работа:</span>
               <Button
                 classNames={
                   (isWorking || !(status == States.default)
@@ -228,7 +283,8 @@ const Timer = ({ isWorking, SetWorking }) => {
                     SetWork(work + 60);
                 }}
                 onContextMenu={(e) => {
-                  if (work > 0 && status == States.default) SetWork(work - 60);
+                  if (work >= 60 && status == States.default)
+                    SetWork(work - 60);
                   e.preventDefault();
                   return false;
                 }}
@@ -245,7 +301,7 @@ const Timer = ({ isWorking, SetWorking }) => {
               </Button>
             </div>
             <div className="pomodoro_breakup">
-              отдых:
+              <span className="pomodoro_options_text">отдых:</span>
               <Button
                 classNames={
                   (isWorking || !(status == States.default)
@@ -261,7 +317,7 @@ const Timer = ({ isWorking, SetWorking }) => {
                     );
                 }}
                 onContextMenu={(e) => {
-                  if (breakup > 0 && status == States.default)
+                  if (breakup >= 60 && status == States.default)
                     SetBreakup(breakup - 60);
                   e.preventDefault();
                   return false;
@@ -275,7 +331,7 @@ const Timer = ({ isWorking, SetWorking }) => {
               </Button>
             </div>
             <div className="pomodoro_repeat">
-              повторов:
+              <span className="pomodoro_options_text">повторов:</span>
               <Button
                 classNames={
                   (isWorking || !(status == States.default)
@@ -286,7 +342,7 @@ const Timer = ({ isWorking, SetWorking }) => {
                   if (status == States.default) SetRound(round + 1);
                 }}
                 onContextMenu={(e) => {
-                  if (round > 0 && status == States.default)
+                  if (round >= 1 && status == States.default)
                     SetRound(round - 1);
                   e.preventDefault();
                   return false;
