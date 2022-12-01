@@ -18,7 +18,7 @@ const Focus = () => {
       : false
   );
   const [status, SetStatus] = useState(
-    JSON.parse(localStorage.getItem("status")) !== undefined
+    JSON.parse(localStorage.getItem("status")) !== null
       ? JSON.parse(localStorage.getItem("status"))
       : States.default
   ); //статус, в котором находится программа
@@ -31,13 +31,15 @@ const Focus = () => {
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
+    console.log("tasks " + tasks);
   }, [tasks]);
   useEffect(() => {
     localStorage.setItem("working", JSON.stringify(isWorking));
+    console.log("isWorking " + isWorking);
   }, [isWorking]);
   useEffect(() => {
     localStorage.setItem("status", JSON.stringify(status));
-    // console.log("status " + status);
+    console.log("status " + status);
   }, [status]);
 
   return (
