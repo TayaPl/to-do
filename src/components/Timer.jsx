@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Button from "./UI/button/Button";
 import "../styles/Timer.css";
+import useSound from "use-sound";
+import done from "../assets/pomodoro_done.mp3";
+import start from "../assets/pomodoro_start.mp3";
 
 const Timer = ({
   isWorking,
@@ -92,12 +95,18 @@ const Timer = ({
     return n;
   };
 
+  const [playSoundDone] = useSound(done);
+  const [playSoundStart] = useSound(start);
   const hours = twoNum(Math.floor(timeLeft / 3600));
   const minutes = twoNum(Math.floor((timeLeft % 3600) / 60));
   const seconds = twoNum(timeLeft % 60);
 
   useEffect(() => {
+    document.title = !isWorking
+      ? "Focus.ru"
+      : hours + ":" + minutes + ":" + seconds;
     if ((status == States.default || status == States.wait_work) && isWorking) {
+      playSoundStart();
       console.log("status == States.default && isWorking");
       if (!(status == States.wait_work)) setTimeLeft(work);
       SetStatus(States.work);
@@ -107,6 +116,7 @@ const Timer = ({
     ) {
       console.log("status == States.work && setTimeLeft <= 0");
       if (!(status == States.wait_work)) {
+        playSoundDone();
         setTimeLeft(breakup);
         setCircleLeft(0);
       }
@@ -114,11 +124,15 @@ const Timer = ({
     } else if (timeLeft < 0 && isWorking) {
       setRoundLeft(roundLeft + 1);
       console.log("там " + round + " ? " + roundLeft);
-      if (roundLeft <= round) {
+      if (roundLeft < round) {
+        playSoundStart();
         setTimeLeft(work);
         SetStatus(States.work);
         setCircleLeft(100);
-      } else handleReset();
+      } else {
+        playSoundDone();
+        handleReset();
+      }
     }
     const interval = setInterval(() => {
       if (isWorking) {

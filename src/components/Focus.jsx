@@ -31,15 +31,15 @@ const Focus = () => {
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    console.log("tasks " + tasks);
+    // console.log("tasks " + tasks);
   }, [tasks]);
   useEffect(() => {
     localStorage.setItem("working", JSON.stringify(isWorking));
-    console.log("isWorking " + isWorking);
+    // console.log("isWorking " + isWorking);
   }, [isWorking]);
   useEffect(() => {
     localStorage.setItem("status", JSON.stringify(status));
-    console.log("status " + status);
+    // console.log("status " + status);
   }, [status]);
 
   return (
